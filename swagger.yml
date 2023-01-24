@@ -1,0 +1,276 @@
+swagger: '2.0'
+info:
+  title: 'Game API Documentation'
+  version: '1.0.0'
+host: 'localhost:5000'
+basePath: '/api'
+tags:
+  - name: 'Players'
+    description: 'List endpoint players'
+definitions:
+  PlayerModel:
+    allOf: 
+      - $ref : '#/definitions/Base'
+      - $ref : '#/definitions/PlayerModelInput'
+      - $ref : '#/definitions/Base2'
+  ListPlayerModel:
+    type: array
+    items:
+      $ref : '#/definitions/PlayerModel'
+  Base:
+    type: object
+    properties:
+      id:
+        type: integer
+      updatedAt:
+        type: string
+        format: date-time
+      createdAt:
+        type: string
+        format: date-time
+  Base2:
+    type: object
+    properties:
+      experience:
+        type: integer
+      lvl:
+        type: integer
+  PlayerModelInput:
+    type: object
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  ResultSuccess:
+    type: object
+    properties:
+      result:
+        type: string
+        example: 'SUCCESS'
+  ResultFailed:
+    type: object
+    properties:
+      result:
+        type: string
+        example: 'FAILED'
+parameters:
+  PlayerPayload:
+    in: body
+    name: payload
+    required: true
+    schema:
+      $ref : '#/definitions/PlayerModelInput'
+  PlayerPayload2:
+    in: body
+    name: payload
+    required: true
+    schema:
+      allOf:
+        - $ref : '#/definitions/PlayerModelInput'
+        - $ref : '#/definitions/Base2'
+  ID:
+    in: path
+    name: id
+    required: true
+    type: integer
+paths:
+  /players:
+    post:
+      tags:
+        - Players
+      parameters:
+        - $ref : '#/parameters/PlayerPayload'
+      responses:
+        201:
+          description: OK
+          schema:
+            allOf:
+              - $ref : '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                $ref : '#/definitions/PlayerModel'
+        500:
+          description: Internal Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Some error occurred while creating the Player.' 
+    get:
+      tags:
+        - Players
+      parameters:
+        - in: query
+          name: username
+          type: string
+        - in: query
+          name: email
+          type: string
+        - in: query
+          name: experience
+          type: integer
+        - in: query
+          name: lvl
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                $ref : '#/definitions/ListPlayerModel'
+        500:
+          description: Internal Error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Some error occurred while retrieving players.' 
+  /players/{id}:
+    get:
+      tags:
+        - Players
+      parameters:
+        - $ref : '#/parameters/ID'
+      responses:
+        200:
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                $ref : '#/definitions/PlayerModel'
+        500:
+          description: Internal Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Error retrieving Player with id=${id}'
+    put:
+      tags:
+        - Players
+      parameters:
+        - $ref : '#/parameters/ID'
+        - $ref : '#/parameters/PlayerPayload2'
+      responses:
+        200:
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Player was updated successfully.'
+        400:
+          description: Input Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Cannot update Player with id=${id}. Maybe Player was not found or req.body is empty!'
+    delete:
+      tags:
+        - Players
+      parameters:
+        - $ref : '#/parameters/ID'
+      responses:
+        200:
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Player was deleted successfully!'
+        400:
+          description: Input Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Cannot delete Player with id=${id}. Maybe Player was not found!'
+        500:
+          description: Internal Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Could not delete Player with id=${id}'
+  /players/exp/{id}:
+    post:
+      tags:
+        - Players
+      parameters:
+        - $ref : '#/parameters/ID'
+        - in: body
+          name: payload
+          required: true
+          schema:
+            type: object
+            properties:
+              exp:
+                type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultSuccess'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Player with id=${id} has more experience.'
+        400:
+          description: Input Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'exp field cannot be empty.'
+        500:
+          description: Internal Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/ResultFailed'
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Cannot update Player with id=${id}!'
+                
+                
+                
