@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000" // port React js
 };
 
 app.use(cors(corsOptions));
@@ -18,6 +18,7 @@ const db = require("./app/models");
 db.client.sync();
 
 require("./app/routes/player.routes")(app);
+require("./app/routes/swagger.routes")(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
