@@ -40,10 +40,16 @@ definitions:
     properties:
       username:
         type: string
+        minLength: 3
+        maxLength: 50
       email:
         type: string
+        minLength: 3
+        maxLength: 50
       password:
         type: string
+        minLength: 3
+        maxLength: 50
   ResultSuccess:
     type: object
     properties:
