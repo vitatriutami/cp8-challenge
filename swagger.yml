@@ -88,7 +88,7 @@ paths:
     post:
       tags:
         - Players
-      summary: 'Create a new player'
+      summary: 'Create player'
       parameters:
         - $ref : '#/parameters/PlayerPayload'
       responses:
