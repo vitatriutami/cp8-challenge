@@ -81,6 +81,7 @@ paths:
     post:
       tags:
         - Players
+      summary: 'Create a new player'
       parameters:
         - $ref : '#/parameters/PlayerPayload'
       responses:
@@ -106,6 +107,7 @@ paths:
     get:
       tags:
         - Players
+      summary: 'Players list'
       parameters:
         - in: query
           name: username
@@ -166,6 +168,7 @@ paths:
     put:
       tags:
         - Players
+      summary: 'Update player'
       parameters:
         - $ref : '#/parameters/ID'
         - $ref : '#/parameters/PlayerPayload2'
@@ -193,6 +196,7 @@ paths:
     delete:
       tags:
         - Players
+      summary: 'Delete player'
       parameters:
         - $ref : '#/parameters/ID'
       responses:
